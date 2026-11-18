@@ -1,0 +1,87 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0 (Edition Yx GX TR 2)">
+  <diagram id="PQ8t-h5hnHKaaNp9KjXa" name="Sayfa-1">
+    <mxGraphModel dx="1515" dy="834" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-1" parent="1" style="ellipse;fillColor=strokeColor;fontColor=light-dark(#333333,#cccccc);" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="333" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-2" parent="1" style="rounded=1;arcSize=20;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="UPCOMING" vertex="1">
+          <mxGeometry height="40" width="92" x="294" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-4" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: UPCOMING]&#xa;        Guard: Valid details and future date&#xa;        Action: Instantiate Event with UPCOMING status&#xa;        System Rule: BetController ALLOWS createOffer() and acceptOffer()&#xa;        Infra: Sync with events.csv" vertex="1">
+          <mxGeometry height="246" width="265" x="55" y="247" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-5" parent="1" style="rounded=1;arcSize=20;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="IN_PROGRESS" vertex="1">
+          <mxGeometry height="40" width="112" x="400" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-7" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: IN_PROGRESS]&#xa;        Guard: Current status must be UPCOMING&#xa;        Action: Lock Event (Betting Window Closed)&#xa;        System Rule: BetController BLOCKS operations (Throws EventStartedException)&#xa;        Infra: Sync with events.csv" vertex="1">
+          <mxGeometry height="270" width="457" x="333" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-8" parent="1" style="rounded=1;arcSize=20;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="FINISHED" vertex="1">
+          <mxGeometry height="40" width="80" x="680" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-10" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: FINISHED]&#xa;        Guard: Result must not be null&#xa;        Action: Set finalResult (e.g., &#39;TEAM_A_WIN&#39;)&#xa;        System Rule: Prepares system for Settlement Phase&#xa;        Infra: Sync with events.csv" vertex="1">
+          <mxGeometry height="246" width="296" x="614" y="14" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-11" parent="1" style="rounded=1;arcSize=20;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="SETTLED" vertex="1">
+          <mxGeometry height="40" width="77" x="950" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-13" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: SETTLED]&#xa;        Guard: Event status MUST be FINISHED&#xa;        Action: SettlementEngine processes all MATCHED bets&#xa;        System Rule: Escrow funds distributed (Zero-Sum Payout)&#xa;        Infra: Massive I/O -&gt; Sync events.csv, bets.csv AND wallets.csv" vertex="1">
+          <mxGeometry height="294" width="360" x="910" y="426" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-14" parent="1" style="ellipse;shape=endState;fillColor=strokeColor;fontColor=light-dark(#333333,#cccccc);" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="981.5" y="233" as="geometry" />
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-15" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-1" style="curved=1;startArrow=none;;fillColor=none;;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="5gPdVzWxxn2J3heoPHjq-2" value="createEvent(EventCreateDTO)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-16" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-2" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;exitX=0;exitY=0.89;entryX=0.5;entryY=0;rounded=0;" target="5gPdVzWxxn2J3heoPHjq-4" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-17" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-2" style="curved=1;startArrow=none;;fillColor=none;;exitX=0.96;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="5gPdVzWxxn2J3heoPHjq-5" value="startEvent(eventId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-18" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-5" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;exitX=0.4;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="5gPdVzWxxn2J3heoPHjq-7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-19" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-5" style="curved=1;startArrow=none;;fillColor=none;;exitX=0.64;exitY=1;entryX=0;entryY=0.25;rounded=0;entryDx=0;entryDy=0;" target="5gPdVzWxxn2J3heoPHjq-8" value="registerResult(EventResultDTO)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-20" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-10" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;exitX=0.5;exitY=1;entryX=0.62;entryY=0;rounded=0;" target="5gPdVzWxxn2J3heoPHjq-8" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-21" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-8" style="curved=1;startArrow=none;;fillColor=none;;exitX=1;exitY=0.5;entryX=0;entryY=0.5;rounded=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="5gPdVzWxxn2J3heoPHjq-11" value="triggerSettlement(eventId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-22" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-13" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;entryX=0.5;entryY=1;rounded=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="5gPdVzWxxn2J3heoPHjq-11" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+            <mxPoint x="850" y="764" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5gPdVzWxxn2J3heoPHjq-23" edge="1" parent="1" source="5gPdVzWxxn2J3heoPHjq-11" style="curved=1;startArrow=none;;fillColor=none;;entryX=0.51;entryY=0;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="5gPdVzWxxn2J3heoPHjq-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+            <mxPoint x="989" y="340" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,212 @@
+=== P2P BETTING SYSTEM - FULL API DOCUMENTATION ===
+
+Base URL: http://localhost:8080
+Content-Type: application/json (for all request bodies)
+
+==================================================
+  ROLE DESCRIPTIONS & SECURITY
+==================================================
+* NORMAL KULLANICILAR (USERS): 
+  - /api/users/login ile giriş yapar ve User ID alırlar.
+  - Kendi cüzdanlarını görüntüleyip bahis/oyun işlemleri yapabilirler.
+  - Profilini ve geçmişini görmek için 'X-User-Id: <ID>' header'ı zorunludur.
+
+* ADMIN'LER (ADMINS):
+  - /api/admins/login ile giriş yapar ve Admin ID alırlar.
+  - Kayıt esnasında 'X-Admin-Secret: SUPER_SECRET_KEY' gereklidir.
+  - Maç (event) oluşturma, başlatma, sonuçlandırma, ve global audit işlevlerine sahiptirler.
+  - Yetki gerektiren admin uç noktalarında 'X-Admin-Id: <ID>' header'ı zorunludur.
+
+--------------------------------------------------
+1. USERS API (/api/users)
+--------------------------------------------------
+* Register User
+  Method: POST
+  URL: /api/users/register
+  Body: { "username": "Alice", "password": "password123" }
+
+* Login User
+  Method: POST
+  URL: /api/users/login
+  Body: { "username": "Alice", "password": "password123" }
+  Returns: Integer (User ID)
+
+* Get User Profile (Şifresiz Temel Bilgiler)
+  Method: GET
+  URL: /api/users/{userId}
+  Headers: X-User-Id: <Kendi ID'niz> VEYA X-Admin-Id: <Admin ID>
+  Returns: { "id": 1, "username": "Alice", "role": "USER" }
+
+* Forgot Password
+  Method: POST
+  URL: /api/users/forgot-password
+  Body: { "email": "atacan@example.com" }
+  Returns: Simulated Email Sent! Your reset token is: XXXXXX
+
+* Reset Password
+  Method: POST
+  URL: /api/users/reset-password
+  Body: { "token": "XXXXXX", "newPassword": "newpassword123" }
+
+--------------------------------------------------
+2. ADMIN API (/api/admins)
+--------------------------------------------------
+* Register Admin
+  Method: POST
+  URL: /api/admins/register
+  Headers: X-Admin-Secret: <SECRET_KEY>
+  Body: { "username": "AdminBob", "password": "adminPassword123" }
+
+* Login Admin
+  Method: POST
+  URL: /api/admins/login
+  Body: { "username": "AdminBob", "password": "adminPassword123" }
+  Returns: Integer (Admin ID)
+
+* Get All Users (Sistemdeki Tüm Kullanıcılar)
+  Method: GET
+  URL: /api/admins/users
+  Headers: X-Admin-Id: <Admin ID>
+  Returns: List of UserResponseDTO objects
+
+* Get All Bets (Sistemdeki Tüm Bahisler - Denetim)
+  Method: GET
+  URL: /api/admins/bets
+  Headers: X-Admin-Id: <Admin ID>
+  Returns: List of ALL Bet objects
+
+* Override User Balance (Admin yetkisiyle bakiyeyi doğrudan ayarlama)
+  Method: PUT
+  URL: /api/admins/wallets/{userId}
+  Headers: X-Admin-Id: <Admin ID>
+  Body: { "newBalance": 1500.0 }
+
+--------------------------------------------------
+3. WALLETS API (/api/wallets)
+--------------------------------------------------
+* Get Available Balance (Sadece aktif bakiye döner)
+  Method: GET
+  URL: /api/wallets/{userId}/balance
+  Returns: double
+
+* Get Wallet Details (Aktif ve kilitli bakiyeyi obje olarak döner)
+  Method: GET
+  URL: /api/wallets/{userId}/details
+  Returns: { "userId": 1, "availableBalance": 500.0, "lockedBalance": 200.0 }
+
+* Deposit Funds
+  Method: POST
+  URL: /api/wallets/deposit
+  Headers: X-User-Id: <User ID>
+  Body: { "userId": 1, "amount": 500.0 }
+
+* Withdraw Funds
+  Method: POST
+  URL: /api/wallets/withdraw
+  Headers: X-User-Id: <User ID>
+  Body: { "userId": 1, "amount": 100.0 }
+
+--------------------------------------------------
+4. EVENTS API (/api/events)
+--------------------------------------------------
+* Get All Events (Sistemdeki tüm maçları statü farketmeksizin döner)
+  Method: GET
+  URL: /api/events
+  Returns: List of Event objects.
+
+* Get Available Events (Sadece aktif / UPCOMING maçları döner)
+  Method: GET
+  URL: /api/events/available
+  Returns: List of Event objects.
+
+* Get Specific Event Details
+  Method: GET
+  URL: /api/events/{eventId}
+  Returns: Event object
+
+* Create Event (Admin Only - ID Backend tarafından üretilir)
+  Method: POST
+  URL: /api/events
+  Headers: X-Admin-Id: <Admin ID>
+  Body: { "description": "Lakers vs Bulls", "optionA": "Lakers", "optionB": "Bulls" }
+
+* Start Event (Admin Only - Bahis alımını durdurur, maçı başlatır)
+  Method: PUT
+  URL: /api/events/{eventId}/start
+  Headers: X-Admin-Id: <Admin ID>
+
+* Register Result & Settle (Admin Only - Maç sonucunu girer ve bahisleri dağıtır)
+  Method: POST
+  URL: /api/events/result
+  Headers: X-Admin-Id: <Admin ID>
+  Body: { "eventId": 1001, "finalResult": "Lakers" }
+
+--------------------------------------------------
+5. 1v1 BETS API (/api/bets)
+--------------------------------------------------
+* Get Available Bets (Eşleşmeyi bekleyen bahisler)
+  Method: GET
+  URL: /api/bets/available
+  Returns: List of Bet objects (Status: PENDING)
+
+* Create Bet Offer (Cüzdandan 'stake' kadar para kilitlenir - Locked Balance)
+  Method: POST
+  URL: /api/bets
+  Body: { "creatorId": 1, "eventId": 1001, "stake": 100.0, "creatorSelection": "Lakers" }
+
+* Match (Accept) Bet Offer (Karşı taraf da 'stake' kadar para koyar ve eşleşir)
+  Method: PUT
+  URL: /api/bets/match
+  Body: { "betId": 123456, "acceptorId": 2 }
+
+* Cancel Bet Offer (Sadece yaratıcısı, eşleşmemiş bahsi iptal edebilir. Kilitli para iade edilir)
+  Method: PUT
+  URL: /api/bets/{betId}/cancel?requesterId={userId}
+
+--------------------------------------------------
+6. MULTIPLAYER GAME ROOMS API (/api/gamerooms)
+--------------------------------------------------
+* Get All Game Rooms (Admin audit log için tüm odaları döner)
+  Method: GET
+  URL: /api/gamerooms
+  Returns: List of ALL GameRoom objects.
+
+* Get Available Game Rooms (Sadece OPEN statüsündeki odalar)
+  Method: GET
+  URL: /api/gamerooms/available
+
+* Get Specific Game Room Details (İçindeki katılımcıları görmek için)
+  Method: GET
+  URL: /api/gamerooms/{roomId}
+  Returns: GameRoom object
+
+* Create Game Room (Odayı kuran kişi parasını yatırır ve yerini alır)
+  Method: POST
+  URL: /api/gamerooms/create
+  Body: { "gameType": "DICE_ROULETTE", "entryFee": 50.0, "capacity": 2, "creatorId": 1, "creatorChoice": "2" }
+  // GameTypes: DICE_ROULETTE, JACKPOT, HIGHEST_ROLL, CLOSEST_NUMBER, HIGH_CARD
+  // Not: HIGH_CARD ve HIGHEST_ROLL için "creatorChoice" değeri "AUTO" gönderilir.
+
+* Join Game Room (Kapasite dolduğunda oyun otomatik başlar ve sonuçlanır)
+  Method: PUT
+  URL: /api/gamerooms/{roomId}/join
+  Body: { "userId": 1, "choice": "42" } 
+  // Not: HIGH_CARD ve HIGHEST_ROLL için "choice" değeri "AUTO" gönderilir.
+
+* Leave Game Room (Kapasite dolmadan odadan çıkmak için. Para iade edilir. Eğer oda boşalırsa oda silinir)
+  Method: PUT
+  URL: /api/gamerooms/{roomId}/leave?userId={id}
+
+* Cancel Game Room (Admin yetkisiyle, dolmasına veya başlamasına bakılmaksızın odayı iptal eder)
+  Method: PUT
+  URL: /api/gamerooms/{roomId}/cancel
+
+--------------------------------------------------
+7. HISTORY API (/api/history)
+--------------------------------------------------
+* Get User's Unified History (Bets & Games)
+  Method: GET
+  URL: /api/history/{userId}
+  Headers: X-User-Id: <Kendi User ID'niz veya Admin ID>
+  Returns: { "bets": [...], "games": [...] }
+  Rules: Yalnızca kendi geçmişinizi görebilirsiniz, Adminler herkesin geçmişini görebilir.

@@ -1,0 +1,92 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0 (Edition Yx GX TR 2)">
+  <diagram id="wr5_V66sX0Ofj8kdi434" name="Sayfa-1">
+    <mxGraphModel dx="1642" dy="903" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-1" parent="1" style="ellipse;fillColor=strokeColor;fontColor=light-dark(#333333,#cccccc);" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="446" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-2" parent="1" style="rounded=1;arcSize=20;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="PENDING" vertex="1">
+          <mxGeometry height="40" width="79" x="414" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-4" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: PENDING]&#xa;        Guard: Creator has sufficient balance&#xa;        Action: Move Creator&#39;s Funds to Locked&#xa;        Domain: version=1, acceptor=null&#xa;        Infra: Sync with wallets.csv &amp; bets.csv" vertex="1">
+          <mxGeometry height="246" width="230" x="55" y="247" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-5" parent="1" style="rounded=1;arcSize=20;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="MATCHED" vertex="1">
+          <mxGeometry height="40" width="83" x="412" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-7" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: MATCHED]&#xa;        Guard: version==1 AND acceptor != creator&#xa;        Action: Move Acceptor&#39;s Funds to Locked&#xa;        Domain: version=2, acceptor=UserID&#xa;        Infra: Thread-Safe CSV Update" vertex="1">
+          <mxGeometry height="246" width="230" x="330" y="438" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-8" parent="1" style="rounded=1;arcSize=20;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="CANCELLED" vertex="1">
+          <mxGeometry height="40" width="98" x="900" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-10" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: CANCELLED]&#xa;        Guard: requester == creator&#xa;        Action: Refund Creator&#39;s Locked Funds&#xa;        Infra: Sync with wallets.csv &amp; bets.csv" vertex="1">
+          <mxGeometry height="198" width="230" x="1040" y="271" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-11" parent="1" style="rounded=1;arcSize=2;strokeWidth=2;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="SETTLED" vertex="1">
+          <mxGeometry height="40" width="77" x="660" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-13" parent="1" style="align=left;spacingLeft=4;fillColor=light-dark(#eeeeee,#1f2020);strokeColor=light-dark(#999999,#cccccc);fontColor=light-dark(#333333,#cccccc);" value="[STATE: SETTLED]&#xa;        Guard: event.status == FINISHED&#xa;        Action: Zero-Sum Payout to Winner&#xa;        Infra: Sync with wallets.csv &amp; bets.csv" vertex="1">
+          <mxGeometry height="198" width="230" x="597" y="486" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-14" parent="1" style="ellipse;shape=endState;fillColor=strokeColor;fontColor=light-dark(#333333,#cccccc);" value="" vertex="1">
+          <mxGeometry height="14" width="14" x="820" y="363" as="geometry" />
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-15" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-1" style="curved=1;startArrow=none;;fillColor=none;;exitX=0.52;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="jhZjfcCnegAPaH1FRAhb-2" value="createOffer(BetCreateDTO)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-16" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-2" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;exitX=0;exitY=0.7;entryX=0.5;entryY=0;rounded=0;" target="jhZjfcCnegAPaH1FRAhb-4" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-17" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-2" style="curved=1;startArrow=none;;fillColor=none;;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="jhZjfcCnegAPaH1FRAhb-5" value="acceptOffer(acceptorId)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-18" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-5" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;exitX=0.36;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="jhZjfcCnegAPaH1FRAhb-7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-19" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-2" style="curved=1;startArrow=none;;fillColor=none;;exitX=1;exitY=0.6;entryX=0.5;entryY=0;rounded=0;entryDx=0;entryDy=0;" target="jhZjfcCnegAPaH1FRAhb-8" value="cancelOffer(requesterId)">
+          <mxGeometry relative="1" x="-0.1195" y="-53" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-20" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-10" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;exitX=0;exitY=0.5;entryX=1;entryY=0.5;rounded=0;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="jhZjfcCnegAPaH1FRAhb-8" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-21" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-5" style="curved=1;startArrow=none;;fillColor=none;;exitX=1;exitY=0.5;entryX=0;entryY=0.5;rounded=0;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="jhZjfcCnegAPaH1FRAhb-11" value="triggerSettlement(result)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-22" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-13" style="curved=1;dashed=1;startArrow=none;;fillColor=none;;exitX=0.5;exitY=0;rounded=0;exitDx=0;exitDy=0;entryX=0.624;entryY=0.918;entryDx=0;entryDy=0;entryPerimeter=0;" target="jhZjfcCnegAPaH1FRAhb-11" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+            <mxPoint x="710" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-23" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-11" style="curved=1;startArrow=none;;fillColor=none;;exitX=1;exitY=0.5;entryX=0.03;entryY=0.44;rounded=0;exitDx=0;exitDy=0;" target="jhZjfcCnegAPaH1FRAhb-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jhZjfcCnegAPaH1FRAhb-24" edge="1" parent="1" source="jhZjfcCnegAPaH1FRAhb-8" style="curved=1;startArrow=none;;fillColor=none;;exitX=0;exitY=0.5;entryX=1.03;entryY=0.43;rounded=0;exitDx=0;exitDy=0;" target="jhZjfcCnegAPaH1FRAhb-14" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

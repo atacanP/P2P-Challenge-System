@@ -1,0 +1,9 @@
+target/
+apache-maven-3.9.6/
+*.class
+*.jar
+*.war
+.idea/
+*.iml
+.vscode/
+.DS_Store

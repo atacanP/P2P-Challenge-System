@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P2P Challenge Arena</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,800;1,800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Gamer Grid Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar hidden" id="navbar">
+        <div class="logo">P2P<span class="highlight">ARENA</span></div>
+        <div class="nav-links">
+            <a href="#" class="nav-item">Dashboard</a>
+            <a href="#" class="nav-item">Battles</a>
+            <a href="#" class="nav-item">Leaderboard</a>
+            
+            <!-- NEW WALLET WIDGET -->
+            <div id="nav-wallet" class="hidden" style="display: flex; align-items: center; gap: 0.5rem; background: rgba(0,0,0,0.3); padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid var(--border-glass);">
+                <span style="font-weight: bold; color: var(--text-color);">💰 $<span id="nav-wallet-balance">0.00</span></span>
+                <span style="font-size: 0.8rem; color: #ff3333;">(🔒 $<span id="nav-wallet-locked">0.00</span>)</span>
+                <button id="nav-btn-deposit" class="btn btn-success btn-sm" style="padding: 0.2rem 0.5rem;">+</button>
+                <button id="nav-btn-withdraw" class="btn btn-secondary btn-sm" style="padding: 0.2rem 0.5rem;">-</button>
+            </div>
+
+            <span id="user-info">Welcome, <span id="display-username"></span></span>
+            <button id="logout-btn" class="btn btn-outline btn-sm">Logout</button>
+        </div>
+    </nav>
+
+    <!-- App Content Wrapper -->
+    <main id="app-container">
+
+        <!-- Wallet Modal -->
+        <div id="wallet-modal" class="modal-overlay hidden">
+            <div class="modal-content glass-panel">
+                <h3 id="wallet-modal-title">Transaction</h3>
+                <input type="number" id="wallet-modal-amount" placeholder="Amount (e.g. 100)">
+                <input type="hidden" id="wallet-modal-action">
+                <div class="btn-group" style="margin-top:1rem;">
+                    <button id="btn-modal-confirm" class="btn btn-primary">Confirm</button>
+                    <button id="btn-modal-cancel" class="btn btn-outline">Cancel</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECTION: Auth (Login/Register) -->
+        <section id="auth-section" class="glass-panel">
+            <div class="auth-header">
+                <h2>Welcome to Arena</h2>
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-target="user-auth">Player</button>
+                    <button class="tab-btn" data-target="admin-auth">Admin</button>
+                </div>
+            </div>
+
+            <!-- User Auth Form -->
+            <div id="user-auth" class="auth-content active">
+                <form id="user-login-form">
+                    <input type="text" id="user-username" placeholder="Username" required>
+                    <input type="password" id="user-password" placeholder="Password" required>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" id="btn-user-login">Login</button>
+                        <button type="button" class="btn btn-secondary" id="btn-user-register">Register</button>
+                    </div>
+                    <div style="margin-top: 10px; text-align: center;">
+                        <a href="#" id="link-forgot-password" style="color: var(--accent-color); font-size: 0.9rem;">Forgot Password?</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div id="forgot-password-auth" class="auth-content hidden">
+                <form id="forgot-password-form">
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem; color: #ccc;">Enter your email to receive a reset token.</p>
+                    <input type="email" id="forgot-email" placeholder="Email (e.g. username@example.com)" required>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" id="btn-request-reset">Send Token</button>
+                        <button type="button" class="btn btn-outline" id="btn-cancel-forgot">Back to Login</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Reset Password Form -->
+            <div id="reset-password-auth" class="auth-content hidden">
+                <form id="reset-password-form">
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem; color: #ccc;">Enter the token you received and your new password.</p>
+                    <input type="text" id="reset-token" placeholder="Reset Token" required>
+                    <input type="password" id="reset-new-password" placeholder="New Password" required>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" id="btn-submit-reset">Reset Password</button>
+                        <button type="button" class="btn btn-outline" id="btn-cancel-reset">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Admin Auth Form -->
+            <div id="admin-auth" class="auth-content hidden">
+                <form id="admin-login-form">
+                    <input type="text" id="admin-username" placeholder="Admin Username" required>
+                    <input type="password" id="admin-password" placeholder="Admin Password" required>
+                    <input type="password" id="admin-secret" placeholder="Secret Key (For Register)" class="hidden">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" id="btn-admin-login">Login</button>
+                        <button type="button" class="btn btn-secondary" id="btn-admin-register">Register</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECTION: User Dashboard -->
+        <section id="user-dashboard" class="dashboard-grid hidden">
+            
+            <!-- Hero Banner -->
+            <div class="hero-banner full-width">
+                <img src="assets/chips.png" alt="Chips" class="hero-img left">
+                <div class="hero-content">
+                    <h2>DOMINATE THE ARENA</h2>
+                    <p>High stakes, huge rewards. Claim your victory today.</p>
+                </div>
+                <img src="assets/dice.png" alt="Dice" class="hero-img right">
+            </div>
+
+            <!-- 1v1 Bets Card -->
+            <div class="glass-panel betting-arena">
+                <div class="bet-creation">
+                    <h4>Create New Bet</h4>
+                    <select id="bet-event-id" class="full-width-input">
+                        <option value="">Select Event</option>
+                    </select>
+                    <input type="number" id="bet-stake" placeholder="Stake Amount ($)">
+                    <div style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                        <label style="font-size: 0.9rem; color: var(--text-color);">Your Choice:</label>
+                        <select id="bet-creator-selection" class="full-width-input" style="margin-top: 0.2rem;">
+                            <option value="">-- Select Event First --</option>
+                        </select>
+                    </div>
+                    <button id="btn-create-bet" class="btn btn-primary full-width">Create Offer</button>
+                </div>
+                <h4>Available Bets</h4>
+                <div class="list-container" id="available-bets-list">
+                    <!-- Bets will be populated here via JS -->
+                </div>
+                </div>
+            </div>
+
+            <!-- Active Events Card (USER) -->
+            <div class="glass-panel">
+                <h3>Active Events</h3>
+                <div class="list-container" id="user-active-events-list">
+                    <!-- Events will be populated here via JS -->
+                </div>
+                
+                <h4 class="mt-1">Active Bets</h4>
+                <div class="list-container" id="my-pending-bets-list">
+                    <!-- User's pending bets with cancel button -->
+                </div>
+            </div>
+            
+            <!-- Game Rooms Card -->
+            <div class="glass-panel game-rooms">
+                <div class="panel-header" style="display: flex; align-items: center; gap: 1rem; border-bottom: 1px dashed var(--border-glass); margin-bottom: 1.5rem; padding-bottom: 0.5rem;">
+                    <img src="assets/cards.png" alt="Cards" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                    <h3 style="margin-bottom: 0; border: none; padding: 0;">Game Rooms</h3>
+                </div>
+                <div class="arena-actions mb-1">
+                    <select id="user-room-type">
+                        <option value="DICE_ROULETTE">Dice Roulette</option>
+                        <option value="JACKPOT">Jackpot</option>
+                        <option value="HIGHEST_ROLL">Highest Roll</option>
+                        <option value="CLOSEST_NUMBER">Closest Number</option>
+                        <option value="HIGH_CARD">High Card</option>
+                    </select>
+                    <input type="number" id="user-room-fee" placeholder="Entry Fee">
+                    <input type="number" id="user-room-capacity" placeholder="Capacity (e.g. 2)">
+                    <select id="user-room-creator-choice" style="margin-top: 0.5rem; width: 100%;">
+                        <option value="">-- Select Your Initial Choice --</option>
+                    </select>
+                    <button id="btn-user-create-room" class="btn btn-primary" style="margin-top: 0.5rem;">Create Room</button>
+                </div>
+                
+                <h4>Available Rooms</h4>
+                <div class="list-container" id="available-rooms-list">
+                    <!-- Rooms will be populated here via JS -->
+                </div>
+                <div class="room-actions hidden" id="join-room-panel">
+                    <h4 id="join-room-title">Join Room</h4>
+                    <input type="hidden" id="join-room-id">
+                    <select id="join-room-choice" class="full-width-input mb-1">
+                        <option value="">-- Loading Choices --</option>
+                    </select>
+                    <button id="btn-confirm-join" class="btn btn-primary">Confirm Join</button>
+                    <button id="btn-cancel-join" class="btn btn-outline">Cancel</button>
+                </div>
+            </div>
+            
+            <!-- History Card -->
+            <div class="glass-panel history-card full-width">
+                <h3>My History</h3>
+                <div class="history-lists">
+                    <div class="history-col">
+                        <h4>Bets</h4>
+                        <ul id="history-bets" class="list-container"></ul>
+                    </div>
+                    <div class="history-col">
+                        <h4>Games</h4>
+                        <ul id="history-games" class="list-container"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: Admin Dashboard -->
+        <section id="admin-dashboard" class="dashboard-grid hidden">
+            <!-- Event Management Card -->
+            <div class="glass-panel">
+                <h3>Event Management</h3>
+                <div class="admin-section">
+                    <h4>Create Event</h4>
+                    <input type="text" id="admin-event-desc" placeholder="Event Description (e.g. Lakers vs Bulls)">
+                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                        <input type="text" id="admin-event-opt-a" placeholder="Option A (e.g. Lakers)">
+                        <input type="text" id="admin-event-opt-b" placeholder="Option B (e.g. Bulls)">
+                    </div>
+                    <button id="btn-admin-create-event" class="btn btn-primary mt-1">Create Event</button>
+                </div>
+
+                <div class="admin-section mt-1">
+                    <h4>Start Event</h4>
+                    <select id="admin-start-event-id"><option value="">Select Event</option></select>
+                    <button id="btn-admin-start-event" class="btn btn-warning">Start Event</button>
+                </div>
+
+                <div class="admin-section mt-1">
+                    <h4>Register Result</h4>
+                    <select id="admin-result-event-id"><option value="">Select Event</option></select>
+                    <select id="admin-result-val"><option value="">Select Winner</option></select>
+                    <button id="btn-admin-register-result" class="btn btn-success">Settle Event</button>
+                </div>
+
+                <div class="admin-section mt-1">
+                    <h4>All Active Events</h4>
+                    <div class="list-container" id="admin-active-events-list" style="max-height: 150px">
+                        <!-- Events will be populated here via JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Management Card -->
+            <div class="glass-panel">
+                <h3>User Management</h3>
+                <div class="admin-section">
+                    <h4>Check & Override Wallet</h4>
+                    <select id="admin-wallet-user-id"><option value="">Select User</option></select>
+                    <button id="btn-admin-check-wallet" class="btn btn-secondary mb-1">Check Balance</button>
+                    <div id="admin-wallet-display" class="hidden mb-1">
+                        <span class="item-title">Active: $<span id="admin-display-active">0.00</span> | Locked: $<span id="admin-display-locked">0.00</span></span>
+                    </div>
+                    
+                    <input type="number" id="admin-wallet-balance" placeholder="New Active Balance">
+                    <button id="btn-admin-override-wallet" class="btn btn-primary">Update Balance</button>
+                </div>
+
+                <div class="admin-section mt-1">
+                    <h4>User History</h4>
+                    <select id="admin-history-user-id"><option value="">Select User</option></select>
+                    <button id="btn-admin-view-history" class="btn btn-secondary">Fetch History</button>
+                    
+                    <div id="admin-history-display" class="hidden mt-1">
+                        <h5 class="item-title">Bets</h5>
+                        <ul id="admin-history-bets" class="list-container" style="max-height: 150px"></ul>
+                        <h5 class="item-title mt-1">Games</h5>
+                        <ul id="admin-history-games" class="list-container" style="max-height: 150px"></ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game Room Management Card -->
+            <div class="glass-panel">
+                <h3>Game Room Management</h3>
+                <div class="admin-section">
+                    <h4>Cancel Room</h4>
+                    <select id="admin-cancel-room-id"><option value="">Select Room</option></select>
+                    <button id="btn-admin-cancel-room" class="btn btn-warning">Cancel Room</button>
+                </div>
+                
+                <div class="admin-section mt-1">
+                    <h4>Active Game Rooms</h4>
+                    <ul id="admin-active-rooms-list" class="list-container" style="max-height: 150px"></ul>
+                </div>
+            </div>
+
+            <!-- Audit Card -->
+            <div class="glass-panel full-width">
+                <h3>Global Audit</h3>
+                <div class="history-lists" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="history-col">
+                        <h4>All Events</h4>
+                        <ul id="admin-all-events-list" class="list-container" style="max-height: 250px"></ul>
+                    </div>
+                    <div class="history-col">
+                        <h4>All Bets</h4>
+                        <ul id="admin-all-bets-list" class="list-container" style="max-height: 250px"></ul>
+                    </div>
+                    <div class="history-col">
+                        <h4>All Game Rooms</h4>
+                        <ul id="admin-all-rooms-list" class="list-container" style="max-height: 250px"></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo">P2P<span class="highlight">ARENA</span></div>
+            <div class="footer-links">
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Support</a>
+                <a href="#">Provably Fair</a>
+            </div>
+            <p class="footer-text">&copy; 2026 P2P Challenge System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
